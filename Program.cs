@@ -9,7 +9,17 @@ List<Gene> genes = new List<Gene>()
 List<Chromosome> chromosomes = new List<Chromosome>();
 for (int i = 0; i < POPULATION_SIZE; i++)
 {
-    Chromosome chromosome = new Chromosome(genes, 0);
+    Chromosome chromosome = new Chromosome(genes);
     chromosomes.Add(chromosome);
 }
-Population population = new Population(chromosomes, 0);
+Population currentPopulation = new Population(chromosomes, 0);
+
+for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS; i++)
+{
+    Population nextPopulation = new Population(currentPopulation.SeparateElite(chromosomes), currentPopulation.CurrentIteration + 1);
+    currentPopulation = new Population(currentPopulation.DropElite(chromosomes), currentPopulation.CurrentIteration);
+    while (currentPopulation.Chromosomes.Any())
+    {
+        
+    }
+}

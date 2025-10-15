@@ -26,5 +26,20 @@ namespace Genetic_Algorithm
             _chromosomes = chromosomes;
             _currentIteration = currentIteration;
         }
+
+        public List<Chromosome> SeparateElite(List<Chromosome> chromosomes)
+        {
+            chromosomes = chromosomes.OrderByDescending(c => c.FitnessValue).ToList();
+            List<Chromosome> elite = new List<Chromosome>() { chromosomes.ElementAt(0), chromosomes.ElementAt(1) };
+            return elite;
+        }
+
+        public List<Chromosome> DropElite(List<Chromosome> chromosomes)
+        {
+            chromosomes = chromosomes.OrderByDescending(c => c.FitnessValue).ToList();
+            chromosomes.RemoveAt(0);
+            chromosomes.RemoveAt(0);
+            return chromosomes;
+        }
     }
 }

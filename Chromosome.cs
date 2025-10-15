@@ -27,7 +27,7 @@ namespace Genetic_Algorithm
             get { return _fitnessValue; }
             set { _fitnessValue = value; }
         }
-        public Chromosome(List<Gene> genes, int fitnessValue)
+        public Chromosome(List<Gene> genes)
         {
             _genes = genes;
             _isGenePresent = RandomizePresence(genes.Count);
