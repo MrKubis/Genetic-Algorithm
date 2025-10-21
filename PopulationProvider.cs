@@ -32,10 +32,58 @@ namespace Genetic_Algorithm
 
             }
         }
+        public List<Chromosome> CrossOver(List<Chromosome> pair)
+        {
+            List<Chromosome> newPair = new List<Chromosome>();
+            if (pair[0].IsGenePresent.Count == pair[1].IsGenePresent.Count)
+            {
+                int len = pair[0].IsGenePresent.Count;
+                Random random = new Random();
+                int index = random.Next(len);            
+                List<bool> gens1 = new List<bool>();
+                List<bool> gens2 = new List<bool>();
+                for(int i =0; i < index; i++)
+                {
+                    gens1.Add(pair[0].IsGenePresent[i]);
+                    gens2.Add(pair[1].IsGenePresent[i]);
+                }
+                for(int i = 0;i<len-index; i++)
+                {
+                    gens1.Add(pair[1].IsGenePresent[index + i]);
+                    gens2.Add(pair[0].IsGenePresent[index + i]);
+                }
+                newPair.Add(new Chromosome(pair[0].Genes,gens1));
+                newPair.Add(new Chromosome(pair[0].Genes, gens2));
+                return newPair;
+            }
+            else
+            {
+                Console.WriteLine("Wait... that's illegal");
+                return null;
+            }
+        }
         public Population createNewPopulation()
         {
-            //CREATES NEW POPULATION
-            
+            List<Chromosome> newChromosomeList = new List<Chromosome>();
+            List<Chromosome> elites = CurrentPopulation.SeparateElite();
+            foreach(Chromosome elite in elites) {
+                newChromosomeList.Add(elite);
+            }
+            while (newChromosomeList.Count < CurrentPopulation.Chromosomes.Count)
+            {
+                {
+                    List<Chromosome> crossedPair = CrossOver(CurrentPopulation.ChooseRandomPair());
+                    newChromosomeList.Add(crossedPair[0]);
+                    newChromosomeList.Add(crossedPair[1]);
+                }
+
+            }
+            return new Population(newChromosomeList, CurrentPopulation.CurrentIteration + 1);
+        }
+        public void replacePopulation()
+        {
+            CurrentPopulation = new Population(NewPopulation.Chromosomes, CurrentPopulation.CurrentIteration);
+            NewPopulation = null;
         }
     }
 }
