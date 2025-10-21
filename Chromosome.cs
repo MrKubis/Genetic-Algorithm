@@ -33,12 +33,18 @@ namespace Genetic_Algorithm
             _isGenePresent = RandomizePresence(genes.Count);
             _fitnessValue = CalculateFitness(genes, _isGenePresent);
         }
+        public Chromosome(List <Gene> genes, List<bool> isGenePresent)
+        {
+            _genes = genes;
+            _isGenePresent = isGenePresent;
+            _fitnessValue = CalculateFitness(_genes, _isGenePresent);
+        }
 
         public int CalculateFitness(List<Gene> genes, List<bool> isGenePresent)
         {
             int fitnessValue = 0;
             int weightValue = 0;
-            for (int i = 0; i < genes.Count; i++)
+            for (int i = 0; i < isGenePresent.Count; i++)
             {
                 if (isGenePresent[i] == true)
                 {

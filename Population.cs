@@ -26,20 +26,72 @@ namespace Genetic_Algorithm
             _chromosomes = chromosomes;
             _currentIteration = currentIteration;
         }
-
-        public List<Chromosome> SeparateElite(List<Chromosome> chromosomes)
+        //RETURNS SEPERATED LIST OF 2 ELITE CHROMOSOMES
+        public List<Chromosome> SeparateElite()
         {
-            chromosomes = chromosomes.OrderByDescending(c => c.FitnessValue).ToList();
-            List<Chromosome> elite = new List<Chromosome>() { chromosomes.ElementAt(0), chromosomes.ElementAt(1) };
+            List<Chromosome> orderedChromosomes = new List<Chromosome>();
+            orderedChromosomes = _chromosomes.OrderByDescending(c => c.FitnessValue).ToList();
+            List<Chromosome> elite = new List<Chromosome>() { orderedChromosomes.ElementAt(0), orderedChromosomes.ElementAt(1) };
             return elite;
         }
 
-        public List<Chromosome> DropElite(List<Chromosome> chromosomes)
+        //RETURNS LIST WITHOUT 2 ELITE CHROMOSOMES
+        public List<Chromosome> DropElite()
         {
-            chromosomes = chromosomes.OrderByDescending(c => c.FitnessValue).ToList();
-            chromosomes.RemoveAt(0);
-            chromosomes.RemoveAt(0);
-            return chromosomes;
+            List<Chromosome> droppedChromosomes = _chromosomes.OrderByDescending(c => c.FitnessValue).ToList();
+            droppedChromosomes.RemoveAt(0);
+            droppedChromosomes.RemoveAt(0);
+            return droppedChromosomes;
+        }
+
+        public List<Chromosome> ChooseRandomPair()
+        {
+            List<Chromosome> pair = new List<Chromosome>();
+            Chromosome chr1 = null;
+            int sum = 0;
+            Random random = new Random();
+            double k = random.NextDouble();
+            for (int i=0;i<Chromosomes.Count;i++)
+            {
+                if (Chromosomes[i].FitnessValue != null)
+                {
+                    sum += Chromosomes[i].FitnessValue;
+                }
+                //Jeżeli jakimś cudem nie ma fitness value
+                else
+                {
+                    Console.WriteLine("NO FITNES VALUE!!!");
+                    sum += Chromosomes[i].CalculateFitness(Chromosomes[i].Genes, Chromosomes[i].IsGenePresent);
+                }
+            }
+            int cumulative = 0;
+            foreach (Chromosome chromosome in Chromosomes)
+            {
+                cumulative += chromosome.FitnessValue;
+                if(cumulative > Convert.ToInt32(sum * k))
+                {
+                    pair.Add(chromosome);
+                    break;
+                }
+            }
+            if (pair.Count < 1)
+            {
+                pair.Add(Chromosomes[random.Next(Chromosomes.Count)]);
+            }
+            foreach (Chromosome chromosome in Chromosomes)
+            {
+                cumulative += chromosome.FitnessValue;
+                if (cumulative > Convert.ToInt32(sum * k))
+                {
+                    pair.Add(chromosome);
+                    break;
+                }
+            }
+            if (pair.Count < 2)
+            {
+                pair.Add(Chromosomes[random.Next(Chromosomes.Count)]);
+            }
+            return pair;
         }
     }
 }
