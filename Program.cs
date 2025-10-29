@@ -1,31 +1,39 @@
 ﻿using Genetic_Algorithm;
 using System;
 
-const int POPULATION_SIZE = 20;
-const int MAXIMUM_NUMBER_OF_ITERATIONS = 20;
-
-//Z ŁAPY
-List<Gene> genes = new List<Gene>() 
-{ new Gene(200, 20), new Gene(400, 30), new Gene(500, 10), new Gene(200, 60), new Gene(1000, 70), new Gene(660, 70), new Gene(300, 40), new Gene(100, 150) };
-//
-
-PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, genes);
-
-//GENERATIONS
-for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS; i++)
+const int POPULATION_SIZE = 40;
+const int MAXIMUM_NUMBER_OF_ITERATIONS = 1000;
+const int GENE_COUNT = 2;
+const double MIN_X = -5.12;
+const double MAX_X = 5.12;
+double RastraginFunction(List<double> X)
 {
-    Console.WriteLine("NEW POPULATION!!!");
-    foreach(Chromosome chromosome in populationProvider.CurrentPopulation.Chromosomes)
+    double A = 10.0;
+    double sum = 0;
+    for (int i = 0; i < X.Count; i++)
     {
-        foreach(bool ispresent in chromosome.IsGenePresent)
-        {
-            Console.Write(ispresent ? "1" : "0");
-        }
-        Console.WriteLine();
-        Console.WriteLine("Fitness score: " + chromosome.FitnessValue.ToString());
+        sum += X[i] * X[i] - (A * Math.Cos(2 * Math.PI * X[i]));
     }
-    populationProvider.NewPopulation = populationProvider.createNewPopulation();
-    populationProvider.replacePopulation();
-    // TO JEST ZLE ALE CHODZI MI TU O TO ZEBY NADPISAC OBECNA POPULACJE TĄ NOWĄ
-    
+    sum += A * X.Count;
+    return 1 / sum;
 }
+
+
+List<Chromosome> GAChromosomes = new List<Chromosome>();
+for (int j = 0; j < 40; j++)
+{
+    PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, RastraginFunction);
+    for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS; i++)
+    {
+        populationProvider.NewPopulation = populationProvider.createNewPopulation();
+        populationProvider.replacePopulation();
+    }
+    List<Chromosome> elites = populationProvider.CurrentPopulation.SeparateElite();
+    GAChromosomes.Add(elites[0]);
+}
+
+foreach (Chromosome chromosome in GAChromosomes)
+{
+    Console.WriteLine(chromosome.ToString());
+}
+
