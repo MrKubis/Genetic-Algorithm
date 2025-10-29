@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Genetic_Algorithm
 {
+
     class Population
     {
         private List<Chromosome> _chromosomes;
@@ -47,11 +49,10 @@ namespace Genetic_Algorithm
         public List<Chromosome> ChooseRandomPair()
         {
             List<Chromosome> pair = new List<Chromosome>();
-            Chromosome chr1 = null;
-            int sum = 0;
+            double sum = 0;
             Random random = new Random();
             double k = random.NextDouble();
-            for (int i=0;i<Chromosomes.Count;i++)
+            for (int i = 0; i < Chromosomes.Count; i++)
             {
                 if (Chromosomes[i].FitnessValue != null)
                 {
@@ -61,37 +62,54 @@ namespace Genetic_Algorithm
                 else
                 {
                     Console.WriteLine("NO FITNES VALUE!!!");
-                    sum += Chromosomes[i].CalculateFitness(Chromosomes[i].Genes, Chromosomes[i].IsGenePresent);
+                    sum += Chromosomes[i].CalculateFitness();
                 }
             }
-            int cumulative = 0;
-            foreach (Chromosome chromosome in Chromosomes)
+            double r = sum * k;
+            List<Chromosome> randomizedChromosomes = Chromosomes;
+            //List<Chromosome> randomizedChromosomes = Randomize(Chromosomes);
+            foreach (Chromosome chromosome in randomizedChromosomes)
             {
-                cumulative += chromosome.FitnessValue;
-                if(cumulative > Convert.ToInt32(sum * k))
+                r -= chromosome.FitnessValue;
+                if (r <= 0)
                 {
                     pair.Add(chromosome);
+                    //randomizedChromosomes.Remove(chromosome);
+                    sum -= chromosome.FitnessValue;
                     break;
                 }
             }
-            if (pair.Count < 1)
+            r = sum * k;
+            foreach (Chromosome chromosome in randomizedChromosomes)
             {
-                pair.Add(Chromosomes[random.Next(Chromosomes.Count)]);
-            }
-            foreach (Chromosome chromosome in Chromosomes)
-            {
-                cumulative += chromosome.FitnessValue;
-                if (cumulative > Convert.ToInt32(sum * k))
+                r -= chromosome.FitnessValue;
+                if (r <= 0)
                 {
                     pair.Add(chromosome);
+                    //randomizedChromosomes.Remove(chromosome);
+                    sum -= chromosome.FitnessValue;
                     break;
                 }
-            }
-            if (pair.Count < 2)
-            {
-                pair.Add(Chromosomes[random.Next(Chromosomes.Count)]);
             }
             return pair;
+        }
+        public static List<T> Randomize<T>(List<T> list)
+        {
+            List<T> templist = new List<T>();
+            foreach (T item in list)
+            {
+                templist.Add(item);
+            }
+            List<T> randomizedList = new List<T>();
+            Random rnd = new Random();
+            while (templist.Count > 0)
+            {
+                int index = rnd.Next(0, templist.Count);
+                randomizedList.Add(list[index]);
+                templist.RemoveAt(index);
+
+            }
+            return randomizedList;
         }
     }
 }
