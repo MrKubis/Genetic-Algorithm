@@ -8,67 +8,49 @@ namespace Genetic_Algorithm
 {
     class Chromosome
     {
+
+        private Func<List<double>, double> _fitnessfunction;
+
+        public Func<List<double>, double> Fitnessfunction { get { return _fitnessfunction; } }
         private List<Gene> _genes;
-        private List<bool> _isGenePresent;
-        private int _fitnessValue;
+        private double _fitnessValue;
 
         public List<Gene> Genes
         {
             get { return _genes; }
             set { _genes = value; }
         }
-        public List<bool> IsGenePresent
-        {
-            get { return _isGenePresent; }
-            set { _isGenePresent = value; }
-        }
-        public int FitnessValue
+
+        public double FitnessValue
         {
             get { return _fitnessValue; }
             set { _fitnessValue = value; }
         }
-        public Chromosome(List<Gene> genes)
+        public Chromosome(List<Gene> genes, Func<List<double>, double> func)
         {
             _genes = genes;
-            _isGenePresent = RandomizePresence(genes.Count);
-            _fitnessValue = CalculateFitness(genes, _isGenePresent);
+            _fitnessfunction = func;
+            _fitnessValue = CalculateFitness();
         }
 
-        public int CalculateFitness(List<Gene> genes, List<bool> isGenePresent)
+        public double CalculateFitness()
         {
-            int fitnessValue = 0;
-            int weightValue = 0;
-            for (int i = 0; i < genes.Count; i++)
+            List<double> X = new List<double>();
+            foreach (Gene gene in _genes)
             {
-                if (isGenePresent[i] == true)
-                {
-                    fitnessValue += genes[i].Value;
-                    weightValue += genes[i].Weight;
-                }
+                X.Add(gene.Value);
             }
-            if (weightValue > 1500)
-            {
-                fitnessValue = 0;
-            }
-            return fitnessValue;
+            return _fitnessfunction(X);
         }
 
-        public List<bool> RandomizePresence(int quantityOfGenes)
+        public override string ToString()
         {
-            List<bool> isGenePresent = new List<bool>();
-            for (int i = 0; i < quantityOfGenes; i++)
+            string result = "";
+            for (int i = 0; i < _genes.Count; i++)
             {
-                Random random = new Random();
-                if (random.Next(2) % 2 == 0)
-                {
-                    isGenePresent.Add(false);
-                }
-                else
-                {
-                    isGenePresent.Add(true);
-                }
+                result += _genes[i].Value.ToString() + ", ";
             }
-            return isGenePresent;
+            return result;
         }
     }
 }

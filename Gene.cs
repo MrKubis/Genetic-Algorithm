@@ -8,23 +8,15 @@ namespace Genetic_Algorithm
 {
     class Gene
     {
-        private int _weight;
-        private int _value;
-
-        public int Weight
-        {
-            get { return _weight; }
-            set { _weight = value; }
-        }
-        public int Value
+        private double _value;
+        public double Value
         {
             get { return _value; }
             set { _value = value; }
         }
 
-        public Gene(int weight, int value)
+        public Gene(double value)
         {
-            _weight = weight;
             _value = value;
         }
     }
