@@ -21,7 +21,7 @@ namespace Genetic_Algorithm
         public Population NewPopulation { get { return _newPopulation; } set { _newPopulation = value; } }
         public int Size { get { return _size; } set { _size = value; } }
         public int GeneCount { get { return _geneCount; } set { _geneCount = value; } }
-        public PopulationProvider(int populationSize, int geneCount, double min_x, double max_x, Func<List<double>, double> function)
+        public PopulationProvider(int populationSize, int geneCount, double min_x, double max_x, Func<List<double>, double> function, double mutationProbability)
         {
             Random random = new Random();
             //USTAWIA WIELKOSC POPULACJI, LISTĘ GENÓW, OBECNĄ POPULACJĘ 
@@ -30,6 +30,7 @@ namespace Genetic_Algorithm
             _fitnessfunction = function;
             _max_x = max_x;
             _min_x = min_x;
+            _mutationProbability = mutationProbability;
             List<Chromosome> chromosomes = new List<Chromosome>();
             for (int i = 0; i < populationSize; i++)
             {
@@ -152,7 +153,7 @@ namespace Genetic_Algorithm
             Random random = new Random();
             bool plus = true;
             bool minus = true;
-            double r = 0.15 * Math.Abs(_max_x - _min_x);
+            double r = _mutationProbability * Math.Abs(_max_x - _min_x);
             if (gene.Value + r > _max_x)
                 plus = false;
             if (gene.Value - r < _min_x)
@@ -178,10 +179,6 @@ namespace Genetic_Algorithm
             else if (plus)
             {
                 gene.Value += r;
-            }
-            else
-            {
-                Console.WriteLine("Jaja");
             }
             return gene;
         }
