@@ -48,50 +48,39 @@ namespace Genetic_Algorithm
 
         public List<Chromosome> ChooseRandomPair()
         {
-            List<Chromosome> pair = new List<Chromosome>();
             double sum = 0;
-            Random random = new Random();
-            double k = random.NextDouble();
             for (int i = 0; i < Chromosomes.Count; i++)
             {
-                if (Chromosomes[i].FitnessValue != null)
+                if (Chromosomes[i].FitnessValue == 0 && Chromosomes[i].Fitnessfunction != null)
+                {
+                    sum += Chromosomes[i].CalculateFitness();
+                }
+                else
                 {
                     sum += Chromosomes[i].FitnessValue;
                 }
-                //Jeżeli jakimś cudem nie ma fitness value
-                else
-                {
-                    Console.WriteLine("NO FITNES VALUE!!!");
-                    sum += Chromosomes[i].CalculateFitness();
-                }
             }
-            double r = sum * k;
             List<Chromosome> randomizedChromosomes = Chromosomes;
-            //List<Chromosome> randomizedChromosomes = Randomize(Chromosomes);
-            foreach (Chromosome chromosome in randomizedChromosomes)
+            
+            Chromosome parent1 = ChooseOneParent(sum);
+            Chromosome parent2 = ChooseOneParent(sum);
+            return new List<Chromosome>() { parent1, parent2 };
+        }
+        private Chromosome ChooseOneParent(double totalFitnessSum)
+        {
+            Random random = new Random();
+
+            double r = totalFitnessSum * random.NextDouble();
+
+            foreach (Chromosome chromosome in _chromosomes)
             {
                 r -= chromosome.FitnessValue;
                 if (r <= 0)
                 {
-                    pair.Add(chromosome);
-                    //randomizedChromosomes.Remove(chromosome);
-                    sum -= chromosome.FitnessValue;
-                    break;
+                    return chromosome;
                 }
             }
-            r = sum * k;
-            foreach (Chromosome chromosome in randomizedChromosomes)
-            {
-                r -= chromosome.FitnessValue;
-                if (r <= 0)
-                {
-                    pair.Add(chromosome);
-                    //randomizedChromosomes.Remove(chromosome);
-                    sum -= chromosome.FitnessValue;
-                    break;
-                }
-            }
-            return pair;
+            return _chromosomes.Last();
         }
         public static List<T> Randomize<T>(List<T> list)
         {

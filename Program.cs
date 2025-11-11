@@ -2,7 +2,7 @@
 using System;
 
 const int POPULATION_SIZE = 40;
-const int MAXIMUM_NUMBER_OF_ITERATIONS = 1000;
+const int MAXIMUM_NUMBER_OF_ITERATIONS = 5000;
 const int GENE_COUNT = 2;
 const double MIN_X = -5.12;
 const double MAX_X = 5.12;

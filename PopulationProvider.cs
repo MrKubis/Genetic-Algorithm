@@ -57,7 +57,6 @@ namespace Genetic_Algorithm
             int min = 0;
             int max = 0;
 
-            //Tu jest błąd
 
             if (a == b)
             {
@@ -85,12 +84,17 @@ namespace Genetic_Algorithm
             }
             for (int i = a; i < b; i++)
             {
-                double x0 = Math.Min(pair[0].Genes[i].Value, pair[1].Genes[i].Value);
-                double x1 = Math.Max(pair[0].Genes[i].Value, pair[1].Genes[i].Value);
+                double x0 = pair[0].Genes[i].Value;
+                double x1 = pair[1].Genes[i].Value;
 
-                double r = Math.Abs(x1 - x0);
-                //x0 -= r * alpha;
-                //x1 += r * alpha;
+                double d = Math.Abs(x1 - x0);
+                min = (int)(Math.Min(x0, x1) - d * alpha);
+                max = (int)(Math.Max(x0, x1) + d * alpha);
+
+                min = Math.Max(min, (int)_min_x);
+                max = Math.Min(max, (int)_max_x);
+
+                double r = Math.Abs(max - min);
                 double value = r * random.NextDouble() + x0;
                 Gene gene = new Gene(value);
                 if (random.NextDouble() <= _mutationProbability)
