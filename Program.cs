@@ -22,12 +22,13 @@ double calculateDeviation(List<double>x)
 {
     double mean = calculateMean(x);
     double sum = 0;
-    for (int i = 0; i < x.Count; i++) {
+    for (int i = 0; i < x.Count; i++)
+    {
         sum += Math.Pow(x[i] - mean, 2);
     }
-    return sum/ (x.Count - 1);
+    return sum / (x.Count - 1);
 
-
+}
 List<Chromosome> GAChromosomes = new List<Chromosome>();
 for (int j = 0; j < 10; j++)
 {
@@ -45,6 +46,7 @@ for (int j = 0; j < 10; j++)
 
 double max = 0;
 Chromosome bestChromosome = null;
+//Choosing the best chromosome
 foreach (Chromosome chromosome in GAChromosomes)
 {
     if(chromosome.FitnessValue > max)
@@ -52,9 +54,49 @@ foreach (Chromosome chromosome in GAChromosomes)
         bestChromosome = chromosome;
     }
 }
-Console.Write(MAXIMUM_NUMBER_OF_ITERATIONS + " ");
-Console.Write(POPULATION_SIZE + " ");
+
+List<double> means = new List<double>();
+List<double> deviations = new List<double>();
+for(int i = 0; i < GENE_COUNT; i++)
+{
+    List<double> X = new List<double>();
+    foreach(Chromosome chromosome in GAChromosomes)
+    {
+        X.Add(chromosome.Genes[i].Value);
+    }
+    means.Add(calculateMean(X));
+    deviations.Add(calculateDeviation(X));
+}
+
+List<double> fitness_values = new List<double>();
+foreach (Chromosome chromosome in GAChromosomes)
+{
+}
+Console.Write(MAXIMUM_NUMBER_OF_ITERATIONS);
+Console.Write(" ");
+
+Console.Write(POPULATION_SIZE);
+Console.Write(" ");
+
 Console.Write(bestChromosome);
+Console.Write(" ");
 
+Console.Write("(");
+for(int i =0;  i<means.Count;i++)
+{
+    Console.Write(means[i]);
+    if(i< means.Count-1)
+    Console.Write(',');
+}
+Console.Write(")");
+Console.Write(" ");
 
-
+Console.Write("(");
+for (int i = 0; i < deviations.Count; i++)
+{
+    Console.Write(deviations[i]);
+    if (i < deviations.Count - 1)
+        Console.Write(',');
+}
+Console.Write(")");
+Console.Write(" ");
