@@ -2,29 +2,49 @@
 using System;
 using System.Xml.Linq;
 
-Func<List<double>, double> fitnessfunction;
 
+Func<List<double>, double> fitnessfunction1 = null ;
+double MIN_X = 0;
+double MAX_X = 0;
+int GENE_COUNT = int.Parse(args[1]);
 switch (args[0])
 {
     case "Rastragin":
-        { 
-            fitnessfunction = FunctionsProvider.RastraginFunction; break;
+        {
+            MIN_X = -5.12;
+            MAX_X = 5.12;
+            fitnessfunction1 = FunctionsProvider.RastraginFunction; break;
+
         }
     case "Rosenbrock":
         {
-            fitnessfunction =FunctionsProvider.RosenbrockFunction; break;
+            MIN_X = -10;
+            MAX_X = 10;
+            fitnessfunction1 = FunctionsProvider.RosenbrockFunction; break;
+
         }
     case "Sphere":
         {
-            fitnessfunction=FunctionsProvider.SphereFunction; break;
+            MIN_X = -10;
+            MAX_X = 10;
+            fitnessfunction1 = FunctionsProvider.SphereFunction; break;
+
         }
     case "Beale":
         {
-            fitnessfunction=FunctionsProvider.BealeFunction; break;
+            GENE_COUNT = 2;
+            MIN_X = -4.5;
+            MAX_X = 4.5;
+            fitnessfunction1 = FunctionsProvider.BealeFunction; break;
+
         }
     case "Bukin":
         {
-            fitnessfunction=FunctionsProvider.BukinFunction; break;
+            GENE_COUNT = 2;
+            MIN_X = -15;
+            MAX_X = -5;
+            fitnessfunction1 = FunctionsProvider.BukinFunction; break;
+
         }
     default:
         {
@@ -37,12 +57,10 @@ switch (args[0])
 
 
 
-int POPULATION_SIZE = int.Parse(args[1]);
-int MAXIMUM_NUMBER_OF_ITERATIONS = int.Parse(args[2]);
+int POPULATION_SIZE = int.Parse(args[2]);
+int MAXIMUM_NUMBER_OF_ITERATIONS = int.Parse(args[3]);
 double mutationProbbability = 0.15;
-const int GENE_COUNT = 2;
-const double MIN_X = -4.5;
-const double MAX_X = 4.5;
+
 
 double calculateMean(List<double> x)
 {
@@ -69,7 +87,7 @@ double calculateDeviation(List<double>x)
 List<Chromosome> GAChromosomes = new List<Chromosome>();
 for (int j = 0; j < 10; j++)
 {
-    PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, FunctionsProvider.RastraginFunction,mutationProbbability);
+    PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, fitnessfunction1, mutationProbbability);
     for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS; i++)
     {
         populationProvider.NewPopulation = populationProvider.createNewPopulation();
@@ -81,14 +99,15 @@ for (int j = 0; j < 10; j++)
 
 
 
-double max = 0;
+double min = double.MaxValue;
 Chromosome bestChromosome = null;
 //Choosing the best chromosome
 foreach (Chromosome chromosome in GAChromosomes)
 {
-    if(chromosome.FitnessValue > max)
+    if(chromosome.FitnessValue < min)
     {
         bestChromosome = chromosome;
+        min = chromosome.FitnessValue;
     }
 }
 

@@ -9,6 +9,8 @@ namespace Genetic_Algorithm
 {
     internal class PopulationProvider
     {
+        private static Random random = new Random();
+
         private readonly Func<List<double>, double> _fitnessfunction;
         private double _mutationProbability = 0.02;
         private double _max_x;
@@ -23,7 +25,6 @@ namespace Genetic_Algorithm
         public int GeneCount { get { return _geneCount; } set { _geneCount = value; } }
         public PopulationProvider(int populationSize, int geneCount, double min_x, double max_x, Func<List<double>, double> function, double mutationProbability)
         {
-            Random random = new Random();
             //USTAWIA WIELKOSC POPULACJI, LISTĘ GENÓW, OBECNĄ POPULACJĘ 
             _geneCount = geneCount;
             _size = populationSize;
@@ -50,15 +51,11 @@ namespace Genetic_Algorithm
         public Chromosome CrossOver(List<Chromosome> pair)
         {
             List<Gene> geneList = new List<Gene>();
-            Random random = new Random();
             double alpha = 0.5;
             int n = pair[0].Genes.Count;
             int a = random.Next(0, n + 1);
             int b = random.Next(0, n + 1);
-            int min = 0;
-            int max = 0;
-
-
+ 
             if (a == b)
             {
                 return pair[random.Next(2)];
@@ -89,13 +86,13 @@ namespace Genetic_Algorithm
                 double x1 = pair[1].Genes[i].Value;
 
                 double d = Math.Abs(x1 - x0);
-                min = (int)(Math.Min(x0, x1) - d * alpha);
-                max = (int)(Math.Max(x0, x1) + d * alpha);
+                double min = Math.Min(x0, x1) - d * alpha;
+                double max = Math.Max(x0, x1) + d * alpha;
 
-                min = Math.Max(min, (int)_min_x);
-                max = Math.Min(max, (int)_max_x);
+                min = Math.Max(min, _min_x);
+                max = Math.Min(max, _max_x);
 
-                double r = Math.Abs(max - min);
+                double r = max - min;
                 double value = r * random.NextDouble() + x0;
                 Gene gene = new Gene(value);
                 if (random.NextDouble() <= _mutationProbability)
