@@ -93,7 +93,7 @@ namespace Genetic_Algorithm
                 max = Math.Min(max, _max_x);
 
                 double r = max - min;
-                double value = r * random.NextDouble() + x0;
+                double value = r * random.NextDouble() + min;
                 Gene gene = new Gene(value);
                 if (random.NextDouble() <= _mutationProbability)
                 {

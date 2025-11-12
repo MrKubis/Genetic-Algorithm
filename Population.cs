@@ -64,10 +64,22 @@ namespace Genetic_Algorithm
             }
             List<Chromosome> randomizedChromosomes = Chromosomes;
             
-            Chromosome parent1 = ChooseOneParent(sum);
-            Chromosome parent2 = ChooseOneParent(sum);
+            Chromosome parent1 = ChooseOneParentFromTournament();
+            Chromosome parent2 = ChooseOneParentFromTournament();
             return new List<Chromosome>() { parent1, parent2 };
         }
+        public Chromosome ChooseOneParentFromTournament(int k = 3)
+        {
+            List<Chromosome> tournamentParticipants = new List<Chromosome>();
+            List<Chromosome> randomizedChromosomes = Randomize(_chromosomes);
+            for (int i = 0; i < k; i++)
+            {
+                tournamentParticipants.Add(randomizedChromosomes[i]);
+            }
+            Chromosome best = tournamentParticipants.OrderBy(c => c.FitnessValue).First();
+            return best;
+        }
+
         private Chromosome ChooseOneParent(double totalFitnessSum)
         {
 

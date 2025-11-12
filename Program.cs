@@ -42,13 +42,13 @@ switch (args[0])
         {
             GENE_COUNT = 2;
             MIN_X = -15;
-            MAX_X = -5;
+            MAX_X = 5;
             fitnessfunction1 = FunctionsProvider.BukinFunction; break;
 
         }
     default:
         {
-            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            Console.WriteLine("Wrong function name!!!");
             System.Environment.Exit(1);
             break;
         }
@@ -85,7 +85,7 @@ double calculateDeviation(List<double>x)
 }
 
 List<Chromosome> GAChromosomes = new List<Chromosome>();
-for (int j = 0; j < 10; j++)
+for (int j = 0; j < 20; j++)
 {
     PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, fitnessfunction1, mutationProbbability);
     for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS; i++)
