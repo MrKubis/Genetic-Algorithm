@@ -10,6 +10,8 @@ namespace Genetic_Algorithm
 
     class Population
     {
+        private static Random random = new Random();
+
         private List<Chromosome> _chromosomes;
         private int _currentIteration;
 
@@ -32,7 +34,7 @@ namespace Genetic_Algorithm
         public List<Chromosome> SeparateElite()
         {
             List<Chromosome> orderedChromosomes = new List<Chromosome>();
-            orderedChromosomes = _chromosomes.OrderByDescending(c => c.FitnessValue).ToList();
+            orderedChromosomes = _chromosomes.OrderBy(c => c.FitnessValue).ToList();
             List<Chromosome> elite = new List<Chromosome>() { orderedChromosomes.ElementAt(0), orderedChromosomes.ElementAt(1) };
             return elite;
         }
@@ -40,7 +42,7 @@ namespace Genetic_Algorithm
         //RETURNS LIST WITHOUT 2 ELITE CHROMOSOMES
         public List<Chromosome> DropElite()
         {
-            List<Chromosome> droppedChromosomes = _chromosomes.OrderByDescending(c => c.FitnessValue).ToList();
+            List<Chromosome> droppedChromosomes = _chromosomes.OrderBy(c => c.FitnessValue).ToList();
             droppedChromosomes.RemoveAt(0);
             droppedChromosomes.RemoveAt(0);
             return droppedChromosomes;
@@ -48,51 +50,52 @@ namespace Genetic_Algorithm
 
         public List<Chromosome> ChooseRandomPair()
         {
-            List<Chromosome> pair = new List<Chromosome>();
             double sum = 0;
-            Random random = new Random();
-            double k = random.NextDouble();
             for (int i = 0; i < Chromosomes.Count; i++)
             {
-                if (Chromosomes[i].FitnessValue != null)
+                if (Chromosomes[i].FitnessValue == 0 && Chromosomes[i].Fitnessfunction != null)
                 {
-                    sum += Chromosomes[i].FitnessValue;
+                    sum +=  1/ Chromosomes[i].CalculateFitness();
                 }
-                //Jeżeli jakimś cudem nie ma fitness value
                 else
                 {
-                    Console.WriteLine("NO FITNES VALUE!!!");
-                    sum += Chromosomes[i].CalculateFitness();
+                    sum +=  1/ Chromosomes[i].FitnessValue;
                 }
             }
-            double r = sum * k;
             List<Chromosome> randomizedChromosomes = Chromosomes;
-            //List<Chromosome> randomizedChromosomes = Randomize(Chromosomes);
-            foreach (Chromosome chromosome in randomizedChromosomes)
-            {
-                r -= chromosome.FitnessValue;
-                if (r <= 0)
-                {
-                    pair.Add(chromosome);
-                    //randomizedChromosomes.Remove(chromosome);
-                    sum -= chromosome.FitnessValue;
-                    break;
-                }
-            }
-            r = sum * k;
-            foreach (Chromosome chromosome in randomizedChromosomes)
-            {
-                r -= chromosome.FitnessValue;
-                if (r <= 0)
-                {
-                    pair.Add(chromosome);
-                    //randomizedChromosomes.Remove(chromosome);
-                    sum -= chromosome.FitnessValue;
-                    break;
-                }
-            }
-            return pair;
+            
+            Chromosome parent1 = ChooseOneParentFromTournament();
+            Chromosome parent2 = ChooseOneParentFromTournament();
+            return new List<Chromosome>() { parent1, parent2 };
         }
+        public Chromosome ChooseOneParentFromTournament(int k = 3)
+        {
+            List<Chromosome> tournamentParticipants = new List<Chromosome>();
+            List<Chromosome> randomizedChromosomes = Randomize(_chromosomes);
+            for (int i = 0; i < k; i++)
+            {
+                tournamentParticipants.Add(randomizedChromosomes[i]);
+            }
+            Chromosome best = tournamentParticipants.OrderBy(c => c.FitnessValue).First();
+            return best;
+        }
+
+        private Chromosome ChooseOneParent(double totalFitnessSum)
+        {
+
+            double r = totalFitnessSum * random.NextDouble();
+
+            foreach (Chromosome chromosome in _chromosomes)
+            {
+                r -= 1 / chromosome.FitnessValue;
+                if (r <= 0)
+                {
+                    return chromosome;
+                }
+            }
+            return _chromosomes.Last();
+        }
+
         public static List<T> Randomize<T>(List<T> list)
         {
             List<T> templist = new List<T>();
@@ -101,10 +104,9 @@ namespace Genetic_Algorithm
                 templist.Add(item);
             }
             List<T> randomizedList = new List<T>();
-            Random rnd = new Random();
             while (templist.Count > 0)
             {
-                int index = rnd.Next(0, templist.Count);
+                int index = random.Next(0, templist.Count);
                 randomizedList.Add(list[index]);
                 templist.RemoveAt(index);
 

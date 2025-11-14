@@ -45,11 +45,16 @@ namespace Genetic_Algorithm
 
         public override string ToString()
         {
-            string result = "";
+            string result = "(";
             for (int i = 0; i < _genes.Count; i++)
             {
-                result += _genes[i].Value.ToString() + ", ";
+                if(i == _genes.Count -1)
+                    result += _genes[i].Value.ToString();
+
+                else
+                   result += _genes[i].Value.ToString() + ", ";
             }
+            result += ")";
             return result;
         }
     }

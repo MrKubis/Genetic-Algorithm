@@ -9,6 +9,8 @@ namespace Genetic_Algorithm
 {
     internal class PopulationProvider
     {
+        private static Random random = new Random();
+
         private readonly Func<List<double>, double> _fitnessfunction;
         private double _mutationProbability = 0.02;
         private double _max_x;
@@ -21,15 +23,15 @@ namespace Genetic_Algorithm
         public Population NewPopulation { get { return _newPopulation; } set { _newPopulation = value; } }
         public int Size { get { return _size; } set { _size = value; } }
         public int GeneCount { get { return _geneCount; } set { _geneCount = value; } }
-        public PopulationProvider(int populationSize, int geneCount, double min_x, double max_x, Func<List<double>, double> function)
+        public PopulationProvider(int populationSize, int geneCount, double min_x, double max_x, Func<List<double>, double> function, double mutationProbability)
         {
-            Random random = new Random();
             //USTAWIA WIELKOSC POPULACJI, LISTĘ GENÓW, OBECNĄ POPULACJĘ 
             _geneCount = geneCount;
             _size = populationSize;
             _fitnessfunction = function;
             _max_x = max_x;
             _min_x = min_x;
+            _mutationProbability = mutationProbability;
             List<Chromosome> chromosomes = new List<Chromosome>();
             for (int i = 0; i < populationSize; i++)
             {
@@ -49,16 +51,11 @@ namespace Genetic_Algorithm
         public Chromosome CrossOver(List<Chromosome> pair)
         {
             List<Gene> geneList = new List<Gene>();
-            Random random = new Random();
             double alpha = 0.5;
             int n = pair[0].Genes.Count;
             int a = random.Next(0, n + 1);
             int b = random.Next(0, n + 1);
-            int min = 0;
-            int max = 0;
-
-            //Tu jest błąd
-
+ 
             if (a == b)
             {
                 return pair[random.Next(2)];
@@ -85,13 +82,18 @@ namespace Genetic_Algorithm
             }
             for (int i = a; i < b; i++)
             {
-                double x0 = Math.Min(pair[0].Genes[i].Value, pair[1].Genes[i].Value);
-                double x1 = Math.Max(pair[0].Genes[i].Value, pair[1].Genes[i].Value);
+                double x0 = pair[0].Genes[i].Value;
+                double x1 = pair[1].Genes[i].Value;
 
-                double r = Math.Abs(x1 - x0);
-                //x0 -= r * alpha;
-                //x1 += r * alpha;
-                double value = r * random.NextDouble() + x0;
+                double d = Math.Abs(x1 - x0);
+                double min = Math.Min(x0, x1) - d * alpha;
+                double max = Math.Max(x0, x1) + d * alpha;
+
+                min = Math.Max(min, _min_x);
+                max = Math.Min(max, _max_x);
+
+                double r = max - min;
+                double value = r * random.NextDouble() + min;
                 Gene gene = new Gene(value);
                 if (random.NextDouble() <= _mutationProbability)
                 {
@@ -148,7 +150,7 @@ namespace Genetic_Algorithm
             Random random = new Random();
             bool plus = true;
             bool minus = true;
-            double r = 0.15 * Math.Abs(_max_x - _min_x);
+            double r = _mutationProbability * Math.Abs(_max_x - _min_x);
             if (gene.Value + r > _max_x)
                 plus = false;
             if (gene.Value - r < _min_x)
@@ -174,10 +176,6 @@ namespace Genetic_Algorithm
             else if (plus)
             {
                 gene.Value += r;
-            }
-            else
-            {
-                Console.WriteLine("Jaja");
             }
             return gene;
         }
