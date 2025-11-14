@@ -7,14 +7,11 @@ using System.Threading.Tasks;
 
 namespace Genetic_Algorithm
 {
-
     class Population
     {
         private static Random random = new Random();
-
         private List<Chromosome> _chromosomes;
         private int _currentIteration;
-
         public List<Chromosome> Chromosomes
         {
             get { return _chromosomes; }
@@ -38,7 +35,6 @@ namespace Genetic_Algorithm
             List<Chromosome> elite = new List<Chromosome>() { orderedChromosomes.ElementAt(0), orderedChromosomes.ElementAt(1) };
             return elite;
         }
-
         //RETURNS LIST WITHOUT 2 ELITE CHROMOSOMES
         public List<Chromosome> DropElite()
         {
@@ -47,7 +43,6 @@ namespace Genetic_Algorithm
             droppedChromosomes.RemoveAt(0);
             return droppedChromosomes;
         }
-
         public List<Chromosome> ChooseRandomPair()
         {
             double sum = 0;
@@ -79,7 +74,7 @@ namespace Genetic_Algorithm
             Chromosome best = tournamentParticipants.OrderBy(c => c.FitnessValue).First();
             return best;
         }
-
+        // check which one is better
         private Chromosome ChooseOneParent(double totalFitnessSum)
         {
 
@@ -95,7 +90,6 @@ namespace Genetic_Algorithm
             }
             return _chromosomes.Last();
         }
-
         public static List<T> Randomize<T>(List<T> list)
         {
             List<T> templist = new List<T>();

@@ -1,33 +1,31 @@
 ﻿using Genetic_Algorithm;
-using System;
-using System.Xml.Linq;
 
-
-Func<List<double>, double> fitnessfunction1 = null ;
+Func<List<double>, double> fitnessfunction = null;
 double MIN_X = 0;
 double MAX_X = 0;
 int GENE_COUNT = int.Parse(args[1]);
+
 switch (args[0])
 {
     case "Rastrigin":
         {
             MIN_X = -5.12;
             MAX_X = 5.12;
-            fitnessfunction1 = FunctionsProvider.RastraginFunction; break;
+            fitnessfunction = FunctionsProvider.RastraginFunction; break;
 
         }
     case "Rosenbrock":
         {
             MIN_X = -10;
             MAX_X = 10;
-            fitnessfunction1 = FunctionsProvider.RosenbrockFunction; break;
+            fitnessfunction = FunctionsProvider.RosenbrockFunction; break;
 
         }
     case "Sphere":
         {
             MIN_X = -10;
             MAX_X = 10;
-            fitnessfunction1 = FunctionsProvider.SphereFunction; break;
+            fitnessfunction = FunctionsProvider.SphereFunction; break;
 
         }
     case "Beale":
@@ -35,15 +33,16 @@ switch (args[0])
             GENE_COUNT = 2;
             MIN_X = -4.5;
             MAX_X = 4.5;
-            fitnessfunction1 = FunctionsProvider.BealeFunction; break;
+            fitnessfunction = FunctionsProvider.BealeFunction; break;
 
         }
     case "Bukin":
         {
+            // TODO: change range for y value
             GENE_COUNT = 2;
             MIN_X = -15;
             MAX_X = 5;
-            fitnessfunction1 = FunctionsProvider.BukinFunction; break;
+            fitnessfunction = FunctionsProvider.BukinFunction; break;
 
         }
     default:
@@ -52,15 +51,11 @@ switch (args[0])
             System.Environment.Exit(1);
             break;
         }
-
 }
-
-
 
 int POPULATION_SIZE = int.Parse(args[2]);
 int MAXIMUM_NUMBER_OF_ITERATIONS = int.Parse(args[3]);
-double mutationProbability = 0.15;
-
+double MUTATION_PROBABILITY = 0.15;
 
 double calculateMean(List<double> x)
 {
@@ -81,13 +76,12 @@ double calculateDeviation(List<double>x)
         sum += Math.Pow(x[i] - mean, 2);
     }
     return sum / (x.Count - 1);
-
 }
 
 List<Chromosome> GAChromosomes = new List<Chromosome>();
 for (int j = 0; j < 20; j++)
 {
-    PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, fitnessfunction1, mutationProbability);
+    PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, fitnessfunction, MUTATION_PROBABILITY);
     for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS; i++)
     {
         populationProvider.NewPopulation = populationProvider.createNewPopulation();
@@ -96,8 +90,6 @@ for (int j = 0; j < 20; j++)
     List<Chromosome> elites = populationProvider.CurrentPopulation.SeparateElite();
     GAChromosomes.Add(elites[0]);
 }
-
-
 
 double min = double.MaxValue;
 Chromosome bestChromosome = null;
@@ -141,7 +133,7 @@ Console.Write(";");
 Console.Write(GENE_COUNT);
 Console.Write(";");
 
-Console.Write(mutationProbability);
+Console.Write(MUTATION_PROBABILITY);
 Console.Write(";");
 
 Console.Write(MAXIMUM_NUMBER_OF_ITERATIONS);
@@ -172,9 +164,7 @@ for (int i = 0; i < deviations.Count; i++)
 }
 Console.Write(")");
 Console.Write(";");
-Console.Write(bestChromosome.FitnessValue);
+Console.Write(bestChromosome?.FitnessValue);
 Console.Write(";");
 Console.Write(mean_fitness);
 Console.WriteLine();
-
-

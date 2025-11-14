@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Genetic_Algorithm
+﻿namespace Genetic_Algorithm
 {
     internal class PopulationProvider
     {
         private static Random random = new Random();
-
         private readonly Func<List<double>, double> _fitnessfunction;
-        private double _mutationProbability = 0.02;
+        private double _mutationProbability;
         private double _max_x;
         private double _min_x;
         private int _geneCount;
@@ -119,7 +111,6 @@ namespace Genetic_Algorithm
             }
             return new Chromosome(geneList, pair[0].Fitnessfunction);
         }
-
 
         public Population createNewPopulation()
         {

@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-
-namespace Genetic_Algorithm
+﻿namespace Genetic_Algorithm
 {
     public class FunctionsProvider
     {
-
-
         public static double RastraginFunction(List<double> X)
         {
             double A = 10.0;
@@ -42,16 +33,16 @@ namespace Genetic_Algorithm
         }
         public static double BealeFunction(List<double> X)
         {
-            // X.length == 2!!!!
-            return  (  Math.Pow(1.5 - X[0] + X[0] * X[1], 2)
+            // Beale Function is only 2-dimensional
+            return (Math.Pow(1.5 - X[0] + X[0] * X[1], 2)
                     + Math.Pow(2.25 - X[0] + X[0] * X[1] * X[1], 2)
                     + Math.Pow(2.625 - X[0] + X[0] * X[1] * X[1] * X[1],2)); 
         }
 
         public static double BukinFunction(List<double> X)
         {
-            // X.length == 2!!!!
-            return ( 100 * Math.Sqrt(Math.Abs(X[1] - 0.01 * Math.Pow(X[0],2) )) + 0.01 * Math.Abs(X[0]+10));
+            // Bukin Function is only 2-dimensional
+            return (100 * Math.Sqrt(Math.Abs(X[1] - 0.01 * Math.Pow(X[0],2))) + 0.01 * Math.Abs(X[0]+10));
         }
     }
 }
