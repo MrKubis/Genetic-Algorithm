@@ -9,7 +9,7 @@ double MAX_X = 0;
 int GENE_COUNT = int.Parse(args[1]);
 switch (args[0])
 {
-    case "Rastragin":
+    case "Rastrigin":
         {
             MIN_X = -5.12;
             MAX_X = 5.12;
@@ -59,7 +59,7 @@ switch (args[0])
 
 int POPULATION_SIZE = int.Parse(args[2]);
 int MAXIMUM_NUMBER_OF_ITERATIONS = int.Parse(args[3]);
-double mutationProbbability = 0.15;
+double mutationProbability = 0.15;
 
 
 double calculateMean(List<double> x)
@@ -87,7 +87,7 @@ double calculateDeviation(List<double>x)
 List<Chromosome> GAChromosomes = new List<Chromosome>();
 for (int j = 0; j < 20; j++)
 {
-    PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, fitnessfunction1, mutationProbbability);
+    PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, fitnessfunction1, mutationProbability);
     for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS; i++)
     {
         populationProvider.NewPopulation = populationProvider.createNewPopulation();
@@ -141,7 +141,7 @@ Console.Write(";");
 Console.Write(GENE_COUNT);
 Console.Write(";");
 
-Console.Write(mutationProbbability);
+Console.Write(mutationProbability);
 Console.Write(";");
 
 Console.Write(MAXIMUM_NUMBER_OF_ITERATIONS);
