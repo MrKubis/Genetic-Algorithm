@@ -55,7 +55,7 @@ switch (args[0])
 
 int POPULATION_SIZE = int.Parse(args[2]);
 int MAXIMUM_NUMBER_OF_ITERATIONS = int.Parse(args[3]);
-double MUTATION_PROBABILITY = 0.15;
+double MUTATION_PROBABILITY = 0.1; // best value so far
 
 double calculateMean(List<double> x)
 {
