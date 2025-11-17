@@ -16,8 +16,8 @@ switch (args[0])
         }
     case "Rosenbrock":
         {
-            MIN_X = -10;
-            MAX_X = 10;
+            MIN_X = -3;
+            MAX_X = 3;
             fitnessfunction = FunctionsProvider.RosenbrockFunction; break;
 
         }
@@ -56,6 +56,7 @@ switch (args[0])
 int POPULATION_SIZE = int.Parse(args[2]);
 int MAXIMUM_NUMBER_OF_ITERATIONS = int.Parse(args[3]);
 double MUTATION_PROBABILITY = 0.1; // best value so far
+double CROSSOVER_PROBABILITY = 0.9;
 
 double calculateMean(List<double> x)
 {
@@ -81,7 +82,7 @@ double calculateDeviation(List<double>x)
 List<Chromosome> GAChromosomes = new List<Chromosome>();
 for (int j = 0; j < 20; j++)
 {
-    PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, fitnessfunction, MUTATION_PROBABILITY);
+    PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, fitnessfunction, MUTATION_PROBABILITY, CROSSOVER_PROBABILITY);
     for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS; i++)
     {
         populationProvider.NewPopulation = populationProvider.createNewPopulation();
@@ -134,6 +135,9 @@ Console.Write(GENE_COUNT);
 Console.Write(";");
 
 Console.Write(MUTATION_PROBABILITY);
+Console.Write(";");
+
+Console.Write(CROSSOVER_PROBABILITY);
 Console.Write(";");
 
 Console.Write(MAXIMUM_NUMBER_OF_ITERATIONS);

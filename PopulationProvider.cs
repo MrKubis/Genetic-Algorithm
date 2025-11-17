@@ -5,6 +5,7 @@
         private static Random random = new Random();
         private readonly Func<List<double>, double> _fitnessfunction;
         private double _mutationProbability;
+        private double _crossoverProbability;
         private double _max_x;
         private double _min_x;
         private int _geneCount;
@@ -15,7 +16,7 @@
         public Population NewPopulation { get { return _newPopulation; } set { _newPopulation = value; } }
         public int Size { get { return _size; } set { _size = value; } }
         public int GeneCount { get { return _geneCount; } set { _geneCount = value; } }
-        public PopulationProvider(int populationSize, int geneCount, double min_x, double max_x, Func<List<double>, double> function, double mutationProbability)
+        public PopulationProvider(int populationSize, int geneCount, double min_x, double max_x, Func<List<double>, double> function, double mutationProbability, double crossoverProbability)
         {
             //USTAWIA WIELKOSC POPULACJI, LISTĘ GENÓW, OBECNĄ POPULACJĘ 
             _geneCount = geneCount;
@@ -24,6 +25,7 @@
             _max_x = max_x;
             _min_x = min_x;
             _mutationProbability = mutationProbability;
+            _crossoverProbability = crossoverProbability;
             List<Chromosome> chromosomes = new List<Chromosome>();
             for (int i = 0; i < populationSize; i++)
             {
@@ -125,9 +127,18 @@
 
             while (newChromosomeList.Count < Size)
             {
-                Chromosome newChromosome = CrossOver(CurrentPopulation.ChooseRandomPair());
-
-                newChromosomeList.Add(newChromosome);
+                if(random.NextDouble() <= _crossoverProbability)
+                {
+                    Chromosome newChromosome = CrossOver(CurrentPopulation.ChooseRandomPair());
+                    newChromosomeList.Add(newChromosome);
+                    continue;
+                }
+                //NO CROSSOVER, JUST MUTATION
+                else
+                {
+                    Chromosome newChromosome = CurrentPopulation.ChooseOneParentFromTournament();
+                    newChromosomeList.Add(newChromosome);
+                }
             }
             return new Population(newChromosomeList, CurrentPopulation.CurrentIteration + 1);
         }
