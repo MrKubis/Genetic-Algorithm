@@ -54,3 +54,6 @@ TestResult.xml
 nunit-*.xml
 
 .vs/
+/.idea/misc.xml
+/.idea/GeneticAlgorithm.iml
+/.idea/misc.xml

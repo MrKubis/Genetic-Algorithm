@@ -19,7 +19,7 @@ population_sizes = [
     10, 20, 40, 80
 ]
 iteration_numbers = [
-    5, 10, 20, 40, 60, 80
+    5, 10, 20, 40, 60, 80, 100, 1000
 ]
 
 file_name = "result.csv"
@@ -29,7 +29,7 @@ final_directory = os.path.join(os.path.abspath(parent_dir), 'bin\\Debug\\net8.0\
 
 with open(file_name, 'w') as f:
     writer = csv.writer(f, delimiter=';')
-    writer.writerow(["Algorytm","Funkcja testowa","Liczba szukanych parametrów", "Prawdopobieństwo mutacji",	"Liczba iteracji",	"Rozmiar populacji",	"Znalezione minimum",	"Średnia wartość znalezionych parametrów",	"Odchylenie standardowe znalezionych parametrów", "Wartość funkcji celu"	,"Odchylenie standardowe funkcji celu"])
+    writer.writerow(["Algorytm","Funkcja testowa","Liczba szukanych parametrów", "Prawdopobieństwo mutacji", "Prawdopobieństwo crossover",	"Liczba iteracji",	"Rozmiar populacji",	"Znalezione minimum",	"Średnia wartość znalezionych parametrów",	"Odchylenie standardowe znalezionych parametrów", "Wartość funkcji celu"	,"Odchylenie standardowe funkcji celu"])
     for function in functions:
         for population_size in population_sizes:
             for iteration_number in iteration_numbers:
