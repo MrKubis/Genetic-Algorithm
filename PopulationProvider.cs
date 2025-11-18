@@ -149,37 +149,13 @@
         }
         private Gene Mutate(Gene gene)
         {
-            Random random = new Random();
-            bool plus = true;
-            bool minus = true;
-            double r = _mutationProbability * Math.Abs(_max_x - _min_x);
-            if (gene.Value + r > _max_x)
-                plus = false;
-            if (gene.Value - r < _min_x)
-                minus = false;
-            if (plus && minus)
-            {
-                //PLUS
-                if (random.Next(2) == 1)
-                {
-                    gene.Value += r;
-                }
-                //MINUS
-                else
-                {
-                    gene.Value -= r;
-                }
-            }
-            else if (minus)
-            {
-                gene.Value -= r;
+            double sigma = 0.05;
+            double gaussian = Math.Sqrt(-2 * Math.Log(random.NextDouble())) *
+                              Math.Sin(2 * Math.PI * random.NextDouble());
+            double newValue = gene.Value + gaussian * sigma;
 
-            }
-            else if (plus)
-            {
-                gene.Value += r;
-            }
-            return gene;
+            newValue = Math.Clamp(newValue, _min_x, _max_x);
+            return new Gene(newValue);
         }
     }
 }
