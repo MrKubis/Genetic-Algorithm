@@ -172,3 +172,9 @@ Console.Write(bestChromosome?.FitnessValue);
 Console.Write(";");
 Console.Write(mean_fitness);
 Console.WriteLine();
+
+/*
+GeneticAlgorithm ga = new GeneticAlgorithm()
+    ga.Solve();
+ga.XBest[];
+*/
