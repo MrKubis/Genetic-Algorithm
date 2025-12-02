@@ -1,4 +1,6 @@
-﻿namespace Genetic_Algorithm
+﻿using System.Diagnostics.Metrics;
+
+namespace Genetic_Algorithm
 {
     class Chromosome
     {

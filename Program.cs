@@ -1,11 +1,11 @@
 ﻿using Genetic_Algorithm;
 
-Func<List<double>, double> fitnessfunction = null;
-double MIN_X = 0;
-double MAX_X = 0;
-int GENE_COUNT = int.Parse(args[1]);
+Func<List<double>, double> fitnessfunction = FunctionsProvider.RastraginFunction;
+double MIN_X = -5.12; // 0;
+double MAX_X = 5.12; // 0;
+int GENE_COUNT = 5; //int.Parse(args[1]);
 
-switch (args[0])
+/*switch (args[0])
 {
     case "Rastrigin":
         {
@@ -51,10 +51,10 @@ switch (args[0])
             System.Environment.Exit(1);
             break;
         }
-}
+}*/
 
-int POPULATION_SIZE = int.Parse(args[2]);
-int MAXIMUM_NUMBER_OF_ITERATIONS = int.Parse(args[3]);
+int POPULATION_SIZE = 80; //int.Parse(args[2]);
+int MAXIMUM_NUMBER_OF_ITERATIONS = 100;  //int.Parse(args[3]);
 double MUTATION_PROBABILITY = 0.1; // best value so far
 double CROSSOVER_PROBABILITY = 0.9;
 
@@ -82,6 +82,11 @@ double calculateDeviation(List<double>x)
 List<Chromosome> GAChromosomes = new List<Chromosome>();
 for (int j = 0; j < 20; j++)
 {
+    GeneticAlgorithm GA = new GeneticAlgorithm(POPULATION_SIZE, MAXIMUM_NUMBER_OF_ITERATIONS, GENE_COUNT, [MIN_X, MAX_X], fitnessfunction, MUTATION_PROBABILITY, CROSSOVER_PROBABILITY);
+    GA.Solve();
+
+
+
     PopulationProvider populationProvider = new PopulationProvider(POPULATION_SIZE, GENE_COUNT, MIN_X, MAX_X, fitnessfunction, MUTATION_PROBABILITY, CROSSOVER_PROBABILITY);
     for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS; i++)
     {
@@ -128,7 +133,7 @@ double deviation_fitness = calculateDeviation(fitness_values);
 Console.Write("GA");
 Console.Write(";");
 
-Console.Write(args[0]);
+Console.Write("Rastrigin");
 Console.Write(";");
 
 Console.Write(GENE_COUNT);

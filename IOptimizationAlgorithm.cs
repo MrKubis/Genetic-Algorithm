@@ -10,7 +10,7 @@ namespace Genetic_Algorithm
     {
         string Name { get; set;}
         double Solve();
-        double[] XBest { get;set;}
+        List<double> XBest { get; set;}
 
         double FBest { get; set;}
 
